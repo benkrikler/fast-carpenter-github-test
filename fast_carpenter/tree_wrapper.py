@@ -81,6 +81,9 @@ class WrappedTree(object):
         self.update_array_args(kwargs)
         return self.tree.old_array(*args, **kwargs)
 
+    def __getitem__(self, key):
+        return self.tree[key]
+
     def update_array_args(self, kwargs):
         kwargs.setdefault("cache", self.branch_cache)
         kwargs.setdefault("entrystart", self.event_ranger.start_entry)

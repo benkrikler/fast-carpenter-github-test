@@ -287,6 +287,12 @@ def test_explode():
     assert np.array_equal(exploded.list, [0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2])
 
 
+def test_explode_empty():
+    df = pd.DataFrame({'A': pd.Series([], dtype=object)})
+    exploded = bdf.explode(df)
+    assert len(exploded) == 0
+
+
 def test_densify_dataframe_integers():
     index = [("one", 1), ("one", 3), ("two", 2), ("three", 1), ("three", 2)]
     index = pd.MultiIndex.from_tuples(index, names=["foo", "bar"])

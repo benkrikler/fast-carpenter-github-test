@@ -1,6 +1,6 @@
 import uproot
 from atuproot.BEvents import BEvents
-from .masked_tree import MaskedUprootTree
+from .masked_tree import MaskedUprootTree, MaskedTrees
 
 
 class EventRanger():
@@ -30,7 +30,10 @@ class EventRanger():
 class BEventsWrapped(BEvents):
     def __init__(self, tree, *args, **kwargs):
         ranges = EventRanger()
-        tree = MaskedUprootTree(tree, ranges)
+        if isinstance(tree, dict):
+            tree = MaskedTrees(tree, ranges)
+        else:
+            tree = MaskedUprootTree(tree, ranges)
         super(BEventsWrapped, self).__init__(tree, *args, **kwargs)
         ranges.set_owner(self)
 
@@ -64,17 +67,24 @@ class EventBuilder(object):
         if len(self.config.inputPaths) != 1:
             # TODO - support multiple inputPaths
             raise AttributeError("Multiple inputPaths not yet supported")
-
         # Try to open the tree - some machines have configured limitations
         # which prevent memmaps from begin created. Use a fallback - the
         # localsource option
         try:
+            # TODO: we probably need iterate here or something else to enforce
+            # nevents_per_block, start_block, stop_block
             rootfile = uproot.open(self.config.inputPaths[0])
-            tree = rootfile[self.config.treeName]
+            if isinstance(self.config.treeName, (list, tuple)):
+                tree = {name: rootfile[name] for name in self.config.treeName}
+            else:
+                tree = rootfile[self.config.treeName]
         except MemoryError:
             rootfile = uproot.open(self.config.inputPaths[0],
                                    localsource=uproot.FileSource.defaults)
-            tree = rootfile[self.config.treeName]
+            if isinstance(self.config.treeName, (list, tuple)):
+                tree = {name: rootfile[name] for name in self.config.treeName}
+            else:
+                tree = rootfile[self.config.treeName]
 
         events = BEventsWrapped(tree,
                                 self.config.nevents_per_block,

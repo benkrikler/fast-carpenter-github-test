@@ -1,0 +1,14 @@
+stages:
+- make_vars: fast_carpenter.Define
+- df: fast_carpenter.BinnedDataframe
+
+# Extract RQs
+make_vars:
+variables:
+- od_area: {formula: pulsesODHG.pulseArea_phd}
+- s1_area: {formula: ss.s1Area_phd}
+
+df:
+binning:
+- {in: od_area, bins: {low: 0, high: 1000, nbins: 100}}
+- {in: s1_area, bins: {low: 0, high: 1000, nbins: 100}}

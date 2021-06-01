@@ -22,8 +22,8 @@ def get_version():
 
 
 requirements = ['atuproot==0.1.13', 'atsge==0.2.1', 'atpbar==1.0.8', 'mantichora==0.9.7',
-                'alphatwirl==0.25.5', 'fast-flow>0.5.0', 'fast-curator', 'awkward',
-                'pandas>=1.1', 'numpy', 'numexpr', 'uproot>=3']
+                'alphatwirl==0.25.5', 'fast-flow>0.5.0', 'fast-curator', 'awkward<1.0.0',
+                'pandas>=1.1', 'numpy>=1.16.5', 'numba', 'numexpr', 'uproot >=3,<4']
 repositories = []
 
 setup_requirements = ['pytest-runner', ]
@@ -38,13 +38,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     description="F.A.S.T. package for summarizing ROOT TTrees",
     entry_points={

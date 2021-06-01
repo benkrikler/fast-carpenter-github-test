@@ -1,0 +1,12 @@
+  datasets:
+    - eventtype: mc
+      files:
+        - data/dune_snnu.root
+      name: simulation
+      nevents:
+        mcanalyser20/MCTree: 100
+        mcanalyser10ind/MCTree: 100
+      nfiles: 1
+      tree:
+        - mcanalyser20/MCTree
+        - mcanalyser10ind/MCTree

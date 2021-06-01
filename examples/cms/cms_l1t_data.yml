@@ -1,0 +1,13 @@
+datasets:
+  - eventtype: null
+    files:
+      # - http://fast-hep-data.web.cern.ch/fast-hep-data/cms/L1T/CMS_L1T_study.root
+      - data/CMS_L1T_study.root
+    name: test
+    nevents:
+      "l1CaloTowerEmuTree/L1CaloTowerTree": 1853
+      "l1CaloTowerTree/L1CaloTowerTree": 1853
+    nfiles: 1
+    tree:
+      - "l1CaloTowerEmuTree/L1CaloTowerTree"
+      - "l1CaloTowerTree/L1CaloTowerTree"

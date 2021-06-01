@@ -1,0 +1,25 @@
+stages:
+    # - diff: "fast_carpenter.Define"
+    - var_def: "fast_carpenter.Define"
+    - event_selection: 'fast_carpenter.CutFlow'
+    - histogram: "fast_carpenter.BinnedDataframe"
+
+var_def:
+    variables:
+        - nCaloTower: 'l1CaloTowerTree.L1CaloTowerTree.L1CaloTower.nTower'
+        - caloEt: l1CaloTowerTree.L1CaloTowerTree.L1CaloTower.iet
+
+event_selection:
+    selection:
+        All:
+            - nCaloTower > 0
+
+diff:
+    variables:
+        - diff_emu: "l1CaloTowerTree.L1CaloTowerTree.L1CaloTower.iet - l1CaloTowerTree.L1CaloTowerTree.L1CaloTower.et"
+
+histogram:
+    binning:
+        # - {in: diff_emu, bins: {edges: [-100, -50, -20, 0, 20, 50, 100]}}
+        - {in: "nCaloTower", out: nCaloTower, bins: {edges: [0, 1, 5, 10, 20]}}
+        - {in: "caloEt", out: caloEt, bins: {edges: [0, 10, 20, 50, 80, 120, 200, 400]}}

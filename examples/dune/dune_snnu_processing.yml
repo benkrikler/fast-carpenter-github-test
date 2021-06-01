@@ -1,0 +1,35 @@
+stages:
+  - BasicVars: Define
+  # - HitVars: 2tree-analysis4.HitVars
+  - IndNorm: BinnedDataframe
+  - ColNorm: BinnedDataframe
+
+BasicVars:
+  variables:
+    - isColMarley0: (mcanalyser20.MCTree.Hit_True_GenType == 1) & (mcanalyser20.MCTree.Hit_True_MarleyIndex==0) & (mcanalyser20.MCTree.Hit_View == 2)
+    - isIndMarley0: (mcanalyser10ind.MCTree.Hit_True_GenType == 1) & (mcanalyser10indHit_True_MarleyIndex==0) & (mcanalyser10indHit_View < 2)
+    - isAr39: (mcanalyser20.MCTree.Hit_True_GenType == 4)
+
+# HitVars:
+#           #{mask: isAr39, out_var: Norm_Start_Tick}
+#           {mask1: isIndMarley0, mask2: isColMarley0, out_var1: Norm_Start_Tick_Ind, out_var2: Norm_Start_Tick_Col}
+
+stages:
+    - var_def: "Define"
+    # - event_selection: 'fast_carpenter.CutFlow'
+    - histogram: "BinnedDataframe"
+
+var_def:
+    variables:
+        - Norm_Start_Tick_Ind: 'mcanalyser10ind.MCTree.Hit_Start_Tick'
+        - Norm_Start_Tick: 'mcanalyser20.MCTree.Hit_Start_Tick'
+
+# event_selection:
+#     selection:
+#         All:
+#             - Norm_Start_Tick_Ind > 0
+
+histogram:
+    binning:
+        - {in: "Norm_Start_Tick_Ind", out: norm_start_tick_ind, bins: {edges: [0, 1, 5, 10, 20]}}
+        # - {in: "Norm_Start_Tick", out: norm_start_tick_col, bins: {edges: [0, 1, 5, 10, 20]}}

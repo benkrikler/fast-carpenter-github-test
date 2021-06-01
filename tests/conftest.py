@@ -1,12 +1,33 @@
+import os
+
 import pytest
 import uproot
 from collections import namedtuple
+from six.moves.urllib.request import urlretrieve as download
 
 
 @pytest.fixture
 def infile():
     filename = "tests/data/CMS_HEP_tutorial_ww.root"
     return uproot.open(filename)["events"]
+
+
+@pytest.fixture
+def single_tree_input(infile):
+    return {'events': infile}
+
+
+@pytest.fixture
+def multiple_trees_input():
+    input_file = '/tmp/CMS_L1T_study.root'
+    url = 'http://fast-hep-data.web.cern.ch/fast-hep-data/cms/L1T/CMS_L1T_study.root'
+    if not os.path.exists(input_file):
+        download(url, input_file)
+    trees = ['l1CaloTowerEmuTree/L1CaloTowerTree',
+             'l1CaloTowerTree/L1CaloTowerTree']
+    f = uproot.open(input_file)
+    trees = {tree: f[tree] for tree in trees}
+    return trees
 
 
 FakeEventRange = namedtuple("FakeEventRange", "start_entry stop_entry entries_in_block")
@@ -19,7 +40,12 @@ def event_range():
 
 @pytest.fixture
 def full_event_range():
-    return FakeEventRange(0, 4580, 0)
+    return FakeEventRange(0, 4580, 4580)
+
+
+@pytest.fixture
+def full_event_range_multitree():
+    return FakeEventRange(0, 1853, 1853)
 
 
 @pytest.fixture

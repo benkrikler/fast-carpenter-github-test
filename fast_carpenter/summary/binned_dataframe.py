@@ -202,7 +202,11 @@ class BinnedDataframe():
         return Collector(outfilename, self._dataset_col, binnings=binnings, file_format=self._file_format)
 
     def event(self, chunk):
-        all_inputs = [key for key in chunk.tree.keys() if key.decode() in self.potential_inputs]
+        all_keys = list(chunk.tree.keys())
+        if isinstance(all_keys[0], bytes):
+            all_keys = [key.decode() for key in all_keys]
+
+        all_inputs = [key for key in all_keys if key in self.potential_inputs]
         if chunk.config.dataset.eventtype == "mc" or self.weight_data:
             weights = list(self._weights.values())
             all_inputs += weights
@@ -241,7 +245,7 @@ weight_labels = ("sumw", "sumw2")
 
 
 def _make_column_labels(weights):
-    labels = [w + ":" + l for l in weight_labels for w in weights]
+    labels = [weight + ":" + label for label in weight_labels for weight in weights]
     return [count_label] + labels
 
 
@@ -293,6 +297,8 @@ def explode(df):
 
     # get the list columns
     lst_cols = [col for col, dtype in df.dtypes.items() if is_object_dtype(dtype)]
+    # remove empty columns
+    lst_cols = [col for col in lst_cols if not df[col].empty]
     # Be more specific about which objects are ok
     lst_cols = [col for col in lst_cols if isinstance(df[col].iloc[0], _explodable_types)]
     if not lst_cols:
